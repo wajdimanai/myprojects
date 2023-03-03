@@ -9,7 +9,7 @@ foreach ($user in $users) {
         $inactiveDays = (New-TimeSpan -Start $lastLogon -End (Get-Date)).Days
         if ($inactiveDays -gt 45) {
             Disable-LocalUser -Name $user.Name
-            Set-LocalUser -Name $user.Name -Description "Account disabled due to inactivity"
+            Set-LocalUser -Name $user.Name -Description "Account disabled on $(Get-Date -Format 'yyyy-MM-dd') due to inactivity"
         }
     }
 }
