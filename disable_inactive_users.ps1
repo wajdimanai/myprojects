@@ -5,7 +5,7 @@ foreach ($user in $users) {
     }     $lastLogon = $user.LastLogon
     if (($lastLogon) -and ($user.Enabled)) {
         $inactiveDays = (New-TimeSpan -Start $lastLogon -End (Get-Date)).Days
-        if ($inactiveDays -lt 45) {
+        if ($inactiveDays -gt 45) {
             Disable-LocalUser -Name $user.Name
             $UDS = $user.Description
             $UDS += " Disabled on $(Get-Date -Format 'yyyy-MM-dd')"
