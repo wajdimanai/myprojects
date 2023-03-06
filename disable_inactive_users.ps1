@@ -1,15 +1,15 @@
 $users = Get-LocalUser
 foreach ($user in $users) {
-    if ($user.Name -like "*built*" -or $user.Name -like "*hobbit*" -or $user.Description -like "*built-in*" -or $user.Description -like "*managed and used by the system*") {
-        continue
-    }
-
-    $lastLogon = $user.LastLogon
-    if ($lastLogon) {
-        $inactiveDays = (New-TimeSpan -Start $lastLogon -End (Get-Date)).Days
-        if ($inactiveDays -gt 45) {
-            Disable-LocalUser -Name $user.Name
-            Set-LocalUser -Name $user.Name -Description "Account disabled on $(Get-Date -Format 'yyyy-MM-dd') due to inactivity"
-        }
-    }
+      if ($user.Name -like "*built*" -or $user.Name -like "*test*" -or $user.Description -like "*test*" -or $user.Description -like "*managed and used by the system*") {
+        continue
+    }     $lastLogon = $user.LastLogon
+    if (($lastLogon) -and ($user.Enabled)) {
+        $inactiveDays = (New-TimeSpan -Start $lastLogon -End (Get-Date)).Days
+        if ($inactiveDays -lt 45) {
+            Disable-LocalUser -Name $user.Name
+            $UDS = $user.Description
+            $UDS += " Disabled on $(Get-Date -Format 'yyyy-MM-dd')"
+            Set-LocalUser -Name $user.Name -Description $UDS
+        }
+    }
 }
